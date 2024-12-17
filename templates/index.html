@@ -3,72 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionnaire de Budget Personnel</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Smart Budget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <h1>Gestionnaire de Budget Personnel</h1>
-        
-        <div class="dashboard">
-            <div class="card">
-                <h2>Solde actuel</h2>
-                <h3 id="current-balance">0 €</h3>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-wallet text-indigo-600 text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-gray-800">Smart Budget</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                        <i class="fas fa-download mr-2"></i>Exporter
+                    </button>
+                </div>
             </div>
-            <div class="card">
-                <h2>Dépenses du mois</h2>
-                <h3 id="monthly-expenses">0 €</h3>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-500 text-sm font-medium">Solde total</h3>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">+3.5%</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-wallet text-indigo-600 text-xl mr-3"></i>
+                    <span id="current-balance" class="text-2xl font-bold text-gray-900">0 €</span>
+                </div>
             </div>
-            <div class="card">
-                <h2>Revenus du mois</h2>
-                <h3 id="monthly-income">0 €</h3>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-500 text-sm font-medium">Dépenses du mois</h3>
+                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">+2.1%</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-arrow-down text-red-500 text-xl mr-3"></i>
+                    <span id="monthly-expenses" class="text-2xl font-bold text-gray-900">0 €</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-500 text-sm font-medium">Revenus du mois</h3>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">+5.2%</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-arrow-up text-green-500 text-xl mr-3"></i>
+                    <span id="monthly-income" class="text-2xl font-bold text-gray-900">0 €</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-500 text-sm font-medium">Économies</h3>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Objectif 75%</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-piggy-bank text-blue-500 text-xl mr-3"></i>
+                    <span id="savings" class="text-2xl font-bold text-gray-900">0 €</span>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <h2>Nouvelle transaction</h2>
-            <form id="transaction-form">
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="amount">Montant</label>
-                    <input type="number" id="amount" class="form-control" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="category">Catégorie</label>
-                    <select id="category" class="form-control" required>
-                        <option value="alimentation">Alimentation</option>
-                        <option value="transport">Transport</option>
-                        <option value="logement">Logement</option>
-                        <option value="loisirs">Loisirs</option>
-                        <option value="santé">Santé</option>
-                        <option value="autres">Autres</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="type">Type</label>
-                    <select id="type" class="form-control" required>
-                        <option value="expense">Dépense</option>
-                        <option value="income">Revenu</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </form>
-        </div>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Nouvelle Transaction -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Nouvelle transaction</h2>
+                    <form id="transaction-form" class="space-y-4">
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                            <input type="text" id="description" class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                        </div>
 
-        <div class="card">
-            <h2>Aperçu des dépenses</h2>
-            <div id="expenses-chart" class="chart-container"></div>
-        </div>
+                        <div>
+                            <label for="amount" class="block text-sm font-medium text-gray-700">Montant</label>
+                            <div class="mt-1 relative rounded-lg">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500">€</span>
+                                </div>
+                                <input type="number" id="amount" class="block w-full pl-7 rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" step="0.01" required>
+                            </div>
+                        </div>
 
-        <div class="card">
-            <h2>Historique des transactions</h2>
-            <div id="transactions-list"></div>
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700">Catégorie</label>
+                            <select id="category" class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                <option value="alimentation">Alimentation</option>
+                                <option value="transport">Transport</option>
+                                <option value="logement">Logement</option>
+                                <option value="loisirs">Loisirs</option>
+                                <option value="santé">Santé</option>
+                                <option value="économies">Économies</option>
+                                <option value="autres">Autres</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                            <div class="mt-1 grid grid-cols-2 gap-2">
+                                <label class="flex items-center justify-center p-2 border rounded-lg cursor-pointer">
+                                    <input type="radio" name="type" value="expense" class="hidden" required checked>
+                                    <span class="text-center">
+                                        <i class="fas fa-arrow-down text-red-500 mr-2"></i>
+                                        Dépense
+                                    </span>
+                                </label>
+                                <label class="flex items-center justify-center p-2 border rounded-lg cursor-pointer">
+                                    <input type="radio" name="type" value="income" class="hidden" required>
+                                    <span class="text-center">
+                                        <i class="fas fa-arrow-up text-green-500 mr-2"></i>
+                                        Revenu
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>Ajouter la transaction
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Objectifs budgétaires -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mt-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Objectifs budgétaires</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Alimentation</span>
+                                <span class="text-sm font-medium text-gray-700">65%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-green-600 h-2.5 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Transport</span>
+                                <span class="text-sm font-medium text-gray-700">40%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-700">Économies</span>
+                                <span class="text-sm font-medium text-gray-700">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Graphique des dépenses -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Aperçu des dépenses</h2>
+                    <div id="expenses-chart" class="h-80"></div>
+                </div>
+
+                <!-- Historique des transactions -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Historique des transactions</h2>
+                        <div class="flex space-x-2">
+                            <button class="p-2 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-filter text-gray-500"></i>
+                            </button>
+                            <button class="p-2 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-sort text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <div id="transactions-list" class="min-w-full"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 
     <script src="/static/script.js"></script>
 </body>
