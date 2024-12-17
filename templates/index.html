@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire de Budget Personnel</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestionnaire de Budget Personnel</h1>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h2>Solde actuel</h2>
+                <h3 id="current-balance">0 €</h3>
+            </div>
+            <div class="card">
+                <h2>Dépenses du mois</h2>
+                <h3 id="monthly-expenses">0 €</h3>
+            </div>
+            <div class="card">
+                <h2>Revenus du mois</h2>
+                <h3 id="monthly-income">0 €</h3>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Nouvelle transaction</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Montant</label>
+                    <input type="number" id="amount" class="form-control" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Catégorie</label>
+                    <select id="category" class="form-control" required>
+                        <option value="alimentation">Alimentation</option>
+                        <option value="transport">Transport</option>
+                        <option value="logement">Logement</option>
+                        <option value="loisirs">Loisirs</option>
+                        <option value="santé">Santé</option>
+                        <option value="autres">Autres</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" class="form-control" required>
+                        <option value="expense">Dépense</option>
+                        <option value="income">Revenu</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Aperçu des dépenses</h2>
+            <div id="expenses-chart" class="chart-container"></div>
+        </div>
+
+        <div class="card">
+            <h2>Historique des transactions</h2>
+            <div id="transactions-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Code JavaScript à venir dans la prochaine étape
+    </script>
+</body>
+</html>
