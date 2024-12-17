@@ -43,22 +43,27 @@ function updateTransactionsList(transactions) {
     listElement.innerHTML = '';
 
     const table = document.createElement('table');
+    table.classList.add('transactions-table');
     table.innerHTML = `
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Catégorie</th>
-            <th>Montant</th>
-            <th>Type</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Catégorie</th>
+                <th>Montant</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     `;
 
+    const tbody = table.querySelector('tbody');
     transactions
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .forEach(transaction => {
-            const row = table.insertRow();
+            const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${new Date(transaction.date).toLocaleDateString()}</td>
+                <td>${new Date(transaction.date).toLocaleDateString('fr-FR')}</td>
                 <td>${transaction.description}</td>
                 <td>${transaction.category}</td>
                 <td class="${transaction.type === 'expense' ? 'text-danger' : 'text-success'}">
@@ -66,6 +71,7 @@ function updateTransactionsList(transactions) {
                 </td>
                 <td>${transaction.type === 'expense' ? 'Dépense' : 'Revenu'}</td>
             `;
+            tbody.appendChild(row);
         });
 
     listElement.appendChild(table);
@@ -92,13 +98,28 @@ function updateExpensesChart(transactions) {
     const data = [{
         values: Object.values(expensesByCategory),
         labels: Object.keys(expensesByCategory),
-        type: 'pie'
+        type: 'pie',
+        hole: 0.4,
+        marker: {
+            colors: [
+                '#2ecc71',
+                '#3498db',
+                '#9b59b6',
+                '#f1c40f',
+                '#e74c3c',
+                '#1abc9c'
+            ]
+        }
     }];
 
     const layout = {
         title: 'Répartition des dépenses par catégorie',
         height: 400,
-        showlegend: true
+        showlegend: true,
+        legend: {
+            orientation: 'h',
+            y: -0.2
+        }
     };
 
     Plotly.newPlot('expenses-chart', data, layout);
@@ -134,13 +155,27 @@ document.getElementById('transaction-form').addEventListener('submit', async (e)
         if (response.ok) {
             document.getElementById('transaction-form').reset();
             loadTransactions();
+            showNotification('Transaction ajoutée avec succès', 'success');
         } else {
-            console.error('Erreur lors de l\'ajout de la transaction');
+            showNotification('Erreur lors de l\'ajout de la transaction', 'error');
         }
     } catch (error) {
         console.error('Erreur:', error);
+        showNotification('Erreur lors de la communication avec le serveur', 'error');
     }
 });
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification', `notification-${type}`);
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
 // Chargement initial des données
 document.addEventListener('DOMContentLoaded', loadTransactions);
